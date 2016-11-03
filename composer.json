@@ -1,0 +1,14 @@
+{
+    "name": "topshelfdesign/acf_template_loader",
+    "description": "a package for loading wp templates",
+    "type": "library",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "gregg",
+            "email": "gregg@topshelfdesign.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
