@@ -5,11 +5,18 @@ namespace topshelfdesign;
 class acf_template_loader
 {
 
-    public function __construct($id = false, $acf_field_name = 'content')
+    public function __construct($vars = false)
     {
-        $this->id = $id;
-        $this->acf_field_name = $acf_field_name;
+
+        $this->id = $vars['ID'] ? $vars['ID'] : false;
+        $this->acf_field_name = $vars['acf_field_name'] ? $vars['acf_field_name'] : 'content';
+        $this->toc_title = $vars['toc_title'] ? $vars['toc_title'] : 'title';
+
         $this->fields = get_field($this->acf_field_name, $this->id);
+
+        foreach($this->fields as $c => $field)
+            $this->toc[$c] = $field[$this->toc_title];
+
     }
 
     public function output()
@@ -62,5 +69,6 @@ class acf_template_loader
 
 
     }
+
 
 }
