@@ -19,6 +19,14 @@ class acf_template_loader
 
     }
 
+    public function update_field_title($title = false){
+
+      if(!$title) return false;
+
+      $this->acf_field_name = $title;
+
+    }
+
     public function output()
     {
         foreach ($this->fields as $field):
