@@ -27,6 +27,14 @@ class acf_template_loader
 
     }
 
+    public function use_custom_field_group($field = false){
+
+        if(!$field) return false;
+
+        $this->fields = $field;
+
+    }
+
     public function output()
     {
         foreach ($this->fields as $field):
