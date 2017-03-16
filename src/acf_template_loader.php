@@ -40,6 +40,9 @@ class acf_template_loader
 
     public function output()
     {
+
+        if(!$this->fields) return "No fields loaded.";
+
         foreach ($this->fields as $field):
             if (!file_exists(locate_template("acf-flexible-content/" . $this->acf_field_name . "/" . $field['acf_fc_layout'] . ".php"))) {
                 if (is_user_logged_in())
