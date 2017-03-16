@@ -14,22 +14,25 @@ class acf_template_loader
 
         $this->fields = get_field($this->acf_field_name, $this->id);
 
-        foreach($this->fields as $c => $field)
-            $this->toc[$c] = $field[$this->toc_title];
+        if ($this->fields)
+            foreach ($this->fields as $c => $field)
+                $this->toc[$c] = $field[$this->toc_title];
 
     }
 
-    public function update_field_title($title = false){
+    public function update_field_title($title = false)
+    {
 
-      if(!$title) return false;
+        if (!$title) return false;
 
-      $this->acf_field_name = $title;
+        $this->acf_field_name = $title;
 
     }
 
-    public function use_custom_field_group($field = false){
+    public function use_custom_field_group($field = false)
+    {
 
-        if(!$field) return false;
+        if (!$field) return false;
 
         $this->fields = $field;
 
@@ -47,9 +50,10 @@ class acf_template_loader
         endforeach;
     }
 
-    static function get_template_use_info($acf_field_name = false){
+    static function get_template_use_info($acf_field_name = false)
+    {
 
-        if(!$acf_field_name):
+        if (!$acf_field_name):
             print 'need field name';
             return false;
         endif;
@@ -68,10 +72,10 @@ class acf_template_loader
 
         $op = [];
 
-        foreach($query->posts as $post):
+        foreach ($query->posts as $post):
             $fields = get_field($acf_field_name, $post->ID);
-            if(!$fields) continue;
-            foreach($fields as $field):
+            if (!$fields) continue;
+            foreach ($fields as $field):
                 $op[$field['acf_fc_layout']][] = [
                     'title' => $post->post_title,
                     'ID' => $post->ID,
