@@ -13,10 +13,8 @@ class acf_template_loader
         $this->toc_title = $vars['toc_title'] ? $vars['toc_title'] : 'title';
 
         $this->fields = get_field($this->acf_field_name, $this->id);
+        $this->update_field_indicies();
 
-        if ($this->fields)
-            foreach ($this->fields as $c => $field)
-                $this->toc[$c] = $field[$this->toc_title];
 
     }
 
@@ -35,14 +33,12 @@ class acf_template_loader
         if (!$field) return false;
 
         $this->fields = $field;
+        $this->update_field_indicies();
 
     }
 
     public function output()
     {
-
-        if(!$this->fields) return "No fields loaded.";
-
         foreach ($this->fields as $field):
             if (!file_exists(locate_template("acf-flexible-content/" . $this->acf_field_name . "/" . $field['acf_fc_layout'] . ".php"))) {
                 if (is_user_logged_in())
@@ -91,6 +87,16 @@ class acf_template_loader
         return $op;
 
 
+    }
+
+    private function update_field_indicies(){
+
+        if(!$this->fields) return;
+
+        foreach ($this->fields as $c => $field):
+            $this->toc[$c] = $field[$this->toc_title];
+            $this->fields[$c]['index'] = $c;
+        endforeach;
     }
 
 
