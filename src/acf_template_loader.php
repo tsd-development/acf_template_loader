@@ -49,7 +49,7 @@ class acf_template_loader
         endforeach;
     }
 
-    static function get_template_use_info($acf_field_name = false)
+    static function get_template_use_info($acf_field_name = false, $post_type = 'content')
     {
 
         if (!$acf_field_name):
@@ -57,9 +57,8 @@ class acf_template_loader
             return false;
         endif;
 
-
         $query = new \WP_Query([
-            'post_type' => 'page',
+            'post_type' => $post_type,
             'posts_per_page' => -1,
             'meta_query' => [
                 [
