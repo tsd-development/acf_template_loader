@@ -39,6 +39,12 @@ class acf_template_loader
 
     public function output()
     {
+        if (!$this->fields):
+            if (is_user_logged_in())
+                print '<div class="row"><div class="column"><h2>No fields found</h2></div></div>';
+            return false;
+        endif;
+
         foreach ($this->fields as $field):
             if (!file_exists(locate_template("acf-flexible-content/" . $this->acf_field_name . "/" . $field['acf_fc_layout'] . ".php"))) {
                 if (is_user_logged_in())
@@ -88,9 +94,10 @@ class acf_template_loader
 
     }
 
-    private function update_field_indicies(){
+    private function update_field_indicies()
+    {
 
-        if(!$this->fields) return;
+        if (!$this->fields) return;
 
         foreach ($this->fields as $c => $field):
             $this->toc[$c] = $field[$this->toc_title];
