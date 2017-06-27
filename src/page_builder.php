@@ -62,6 +62,11 @@ class page_builder extends acf_template_loader
     public function pb_output()
     {
 
+        if(!count($this->rows)){
+            print "<h2>No Rows Found</h2>";
+            return;
+        }
+
         foreach ($this->rows as $row):
 
             $primary = $row['primary_content'];
