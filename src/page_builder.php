@@ -1,4 +1,5 @@
 <?
+
 namespace topshelfdesign;
 
 class page_builder extends acf_template_loader
@@ -8,8 +9,18 @@ class page_builder extends acf_template_loader
     {
         parent::__construct($vars);
 
-        $this->rows = get_field("builder_rows", $this->ID);
+        $defaults = [
+            'row_title' => 'builder_rows',
+            'content_field_title' => 'layouts',
+            'primary_content_title' => 'primary_content',
+            'sidebar_content_title' => 'sidebar_content'
+        ];
 
+        $config = \wp_parse_args($vars, $defaults);
+
+        $this->config = $config;
+
+        $this->rows = get_field($config['row_title'], $this->ID);
 
     }
 
@@ -62,32 +73,52 @@ class page_builder extends acf_template_loader
     public function pb_output()
     {
 
-        if(!count($this->rows)){
+        if (!count($this->rows)) {
             print "<h2>No Rows Found</h2>";
             return;
         }
 
         foreach ($this->rows as $row):
 
-            $primary = $row['primary_content'];
-            $sidebar = $row['sidebar_content'];
+            $primary = $row[$this->config['primary_content_title']];
+            $sidebar = $row[$this->config['sidebar_content_title']];
+
+            $primary_with_labels = [];
+            $sidebar_with_labels = [];
+
+            if (count($primary))
+                foreach ($primary as $p_row):
+                    $updated_row = $p_row;
+                    $updated_row['page_builder'] = true;
+                    $primary_with_labels[] = $updated_row;
+                endforeach;
+
+            if (count($sidebar['content']))
+                foreach ($sidebar['content'] as $s_row):
+                    $updated_row = $s_row;
+                    $updated_row['page_builder'] = true;
+                    $sidebar_with_labels[] = $updated_row;
+                endforeach;
+
+
+            foreach ($sidebar as $s_row) $s_row['page_builder'] = true;
 
             $this->division = $row['sidebar'];
 
             $this->columns = $this->get_division();
 
             $l_column_content = new page_builder();
-            $l_column_content->use_custom_field_group($primary['layouts']);
+            $l_column_content->use_custom_field_group($primary_with_labels);
             $l_column_op = $l_column_content->get_output();
 
             $r_column_content = new page_builder();
-            $r_column_content->use_custom_field_group($sidebar['layouts']);
+            $r_column_content->use_custom_field_group($sidebar_with_labels);
             $r_column_op = $r_column_content->get_output();
 
+            $vertical_align = $row['vertical_alignment'] ? $row['vertical_alignment'] : 'top';
 
-            $op = "
-        
-                <div class='row pb_builder_output'>
+            $op = $this->division != 'none' ? "
+                <div class='row pb_builder_output align-{$vertical_align}'>
                     <div class='small-12 medium-{$this->columns[0]} column'>
                         {$l_column_op}
                     </div>
@@ -95,9 +126,13 @@ class page_builder extends acf_template_loader
                         {$r_column_op}
                     </div>
                 </div>
-            
-        
-        ";
+            " : "
+                <div class='row pb_builder_output'>
+                    <div class='small-12 column'>
+                        {$l_column_op}
+                    </div>
+                </div>
+            ";
 
             print $op;
         endforeach;
