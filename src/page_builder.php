@@ -5,7 +5,7 @@ namespace topshelfdesign;
 class page_builder extends acf_template_loader
 {
 
-    public function __construct($vars)
+    public function __construct($vars = [])
     {
         parent::__construct($vars);
 
@@ -86,14 +86,14 @@ class page_builder extends acf_template_loader
             $primary_with_labels = [];
             $sidebar_with_labels = [];
 
-            if (count($primary))
+            if ($primary)
                 foreach ($primary as $p_row):
                     $updated_row = $p_row;
                     $updated_row['page_builder'] = true;
                     $primary_with_labels[] = $updated_row;
                 endforeach;
 
-            if (count($sidebar['content']))
+            if ($sidebar['content'])
                 foreach ($sidebar['content'] as $s_row):
                     $updated_row = $s_row;
                     $updated_row['page_builder'] = true;
