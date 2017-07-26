@@ -88,18 +88,18 @@ class page_builder extends acf_template_loader
 
             if ($primary)
                 foreach ($primary as $p_row):
+                    $p_row[0]['page_builder'] = true;
                     $updated_row = $p_row;
-                    $updated_row['page_builder'] = true;
                     $primary_with_labels[] = $updated_row;
                 endforeach;
 
-            if ($sidebar['content'])
-                foreach ($sidebar['content'] as $s_row):
+
+            if ($sidebar[$this->config['content_field_title']])
+                foreach ($sidebar[$this->config['content_field_title']] as $s_row):
+                    $s_row['page_builder'] = true;
                     $updated_row = $s_row;
-                    $updated_row['page_builder'] = true;
                     $sidebar_with_labels[] = $updated_row;
                 endforeach;
-
 
             foreach ($sidebar as $s_row) $s_row['page_builder'] = true;
 
@@ -108,7 +108,7 @@ class page_builder extends acf_template_loader
             $this->columns = $this->get_division();
 
             $l_column_content = new page_builder();
-            $l_column_content->use_custom_field_group($primary_with_labels);
+            $l_column_content->use_custom_field_group($primary_with_labels[0]);
             $l_column_op = $l_column_content->get_output();
 
             $r_column_content = new page_builder();
